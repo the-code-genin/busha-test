@@ -1,6 +1,8 @@
 package internal
 
 import (
+	"fmt"
+
 	"github.com/redis/go-redis/v9"
 )
 
@@ -22,4 +24,13 @@ func ConnectToRedis() (*redis.Client, error) {
 		DB:       0,
 	})
 	return client, nil
+}
+
+// Prefixes the key with the app redis key for namespacing
+func RedisKey(key string) string {
+	redisPrefix, err := DefaultConfig.Get("REDIS_PREFIX")
+	if err != nil {
+		return key
+	}
+	return fmt.Sprintf("%s.%s", redisPrefix, key)
 }
