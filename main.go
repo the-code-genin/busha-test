@@ -1,30 +1,45 @@
 package main
 
 import (
-	"github.com/jackc/pgx/v5"
-	"github.com/redis/go-redis/v9"
+	"context"
+
+	"github.com/inconshreveable/log15"
 	"github.com/the-code-genin/busha-test/internal"
 )
 
-var pgConn *pgx.Conn
-var redisClient *redis.Client
+// Context encapsulates redis and postgres connections
+var ctx context.Context
 
+// Setup application context
 func init() {
+	// Setup initial context
+	ctx = context.TODO()
+
 	// Load env variables into memory
-	err := internal.LoadEnvVariables()
-	if err != nil {
+	log15.Info("Loading env variables")
+	if err := internal.LoadEnvVariables(); err != nil {
 		panic(err)
 	}
 
 	// Connect to postgres db
-	pgConn, err = internal.ConnectToPostgres()
+	log15.Info("Connecting to postgres database")
+	pgConn, err := internal.ConnectToPostgres()
 	if err != nil {
 		panic(err)
 	}
+	ctx = internal.SetPostgresConn(ctx, pgConn)
 
 	// Connect to redis
-	redisClient, err = internal.ConnectToRedis()
+	log15.Info("Connecting to redis server")
+	redisClient, err := internal.ConnectToRedis()
 	if err != nil {
+		panic(err)
+	}
+	ctx = internal.SetRedisClient(ctx, redisClient)
+
+	// Seed the application database at first startup
+	log15.Info("Seeding system with swapi data")
+	if err = SeedDatabase(ctx); err != nil {
 		panic(err)
 	}
 }
