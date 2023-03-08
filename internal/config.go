@@ -6,8 +6,6 @@ import (
 	"strconv"
 )
 
-type ConfigKey string
-
 const (
 	DBURLKey         = "DATABASE_URL"
 	RedisHostKey     = "REDIS_HOST"

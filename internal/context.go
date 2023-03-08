@@ -8,7 +8,7 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-type ContextKey int
+type ContextKey uint8
 
 const (
 	configContextKey   ContextKey = 1

@@ -39,7 +39,7 @@ func (r *SystemRepository) SetSeeded(val bool) error {
 		return err
 	}
 
-	result := r.redisClient.SetNX(
+	result := r.redisClient.Set(
 		context.Background(),
 		key,
 		"true",
