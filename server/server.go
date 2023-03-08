@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"github.com/the-code-genin/busha-test/internal"
 )
 
 // Server encapsulates a go gin router
@@ -18,8 +19,14 @@ func (s *Server) Start() error {
 }
 
 // Create a new Server
-func NewServer(port int) *Server {
-	router := gin.Default()
+func NewServer(port int) (*Server, error) {
+	// Create router
+	if env, err := internal.DefaultConfig.Get("ENV"); err != nil {
+		return nil, err
+	} else if env == "production" {
+		gin.SetMode(gin.ReleaseMode)
+	}
+	router := gin.New()
 
-	return &Server{router, port}
+	return &Server{router, port}, nil
 }
