@@ -40,7 +40,7 @@ func (r *SystemRepository) SetSeeded(val bool) error {
 }
 
 func NewSystemRepository(ctx context.Context) (*SystemRepository, error) {
-	redisClient, err := internal.ExtractRedisClient(ctx)
+	redisClient, err := internal.GetRedisClient(ctx)
 	if err != nil {
 		return nil, err
 	}

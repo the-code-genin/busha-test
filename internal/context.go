@@ -21,7 +21,7 @@ func SetRedisClient(ctx context.Context, redisClient *redis.Client) context.Cont
 }
 
 // Extract redis client from the context
-func ExtractRedisClient(ctx context.Context) (*redis.Client, error) {
+func GetRedisClient(ctx context.Context) (*redis.Client, error) {
 	redisClient, ok := ctx.Value(redisContextKey).(*redis.Client)
 	if !ok {
 		return nil, errors.New("redis client not found in context")
@@ -35,7 +35,7 @@ func SetPostgresConn(ctx context.Context, pgConn *pgx.Conn) context.Context {
 }
 
 // Extract postgres connection from the context
-func ExtractPostgresConn(ctx context.Context) (*pgx.Conn, error) {
+func GetPostgresConn(ctx context.Context) (*pgx.Conn, error) {
 	pgConn, ok := ctx.Value(postgresContextKey).(*pgx.Conn)
 	if !ok {
 		return nil, errors.New("postgres connection not found in context")
