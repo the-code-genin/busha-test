@@ -9,7 +9,7 @@ import (
 // Attempts to load .env variables into memory if .env file exists
 func LoadEnvVariables(ctx *AppContext) error {
 	// Set default config container
-	ctx.SetConfig(&Config{map[string]interface{}{}})
+	ctx.setConfig(&Config{map[string]interface{}{}})
 
 	// Skip operation if .env file does not exist
 	if _, err := os.Stat(".env"); os.IsNotExist(err) {

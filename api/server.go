@@ -2,7 +2,6 @@ package api
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/the-code-genin/busha-test/internal"
@@ -27,20 +26,16 @@ func NewServer(ctx *internal.AppContext) (*Server, error) {
 	}
 
 	// Create router
-	if env, err := config.Get("ENV"); err != nil {
+	if env, err := config.GetEnv(); err != nil {
 		return nil, err
 	} else if env == "production" {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	router := gin.New()
 
-	port, err := config.Get("HTTP_PORT")
+	port, err := config.GetHTTPPort()
 	if err != nil {
 		return nil, err
 	}
-	httpPort, err := strconv.Atoi(port)
-	if err != nil {
-		return nil, err
-	}
-	return &Server{router, httpPort}, nil
+	return &Server{router, port}, nil
 }

@@ -21,7 +21,7 @@ type AppContext struct {
 }
 
 // Set configuration on the context
-func (s *AppContext) SetConfig(config *Config) {
+func (s *AppContext) setConfig(config *Config) {
 	s.ctx = context.WithValue(s.ctx, configContextKey, config)
 }
 
@@ -35,7 +35,7 @@ func (s *AppContext) GetConfig() (*Config, error) {
 }
 
 // Set redis client on the context
-func (s *AppContext) SetRedisClient(redisClient *redis.Client) {
+func (s *AppContext) setRedisClient(redisClient *redis.Client) {
 	s.ctx = context.WithValue(s.ctx, redisContextKey, redisClient)
 }
 
@@ -49,7 +49,7 @@ func (s *AppContext) GetRedisClient() (*redis.Client, error) {
 }
 
 // Set postgres connection on the context
-func (s *AppContext) SetPostgresConn(pgConn *pgx.Conn) {
+func (s *AppContext) setPostgresConn(pgConn *pgx.Conn) {
 	s.ctx = context.WithValue(s.ctx, postgresContextKey, pgConn)
 }
 

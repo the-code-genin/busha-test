@@ -16,7 +16,7 @@ var wg sync.WaitGroup
 // Setup application context
 func init() {
 	// Setup initial context
-	ctx = internal.NewAppContext(context.TODO())
+	ctx = internal.NewAppContext(context.Background())
 
 	// Load env variables into memory
 	log15.Info("Loading env variables")

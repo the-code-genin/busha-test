@@ -13,7 +13,7 @@ func ConnectToPostgres(ctx *AppContext) error {
 		return err
 	}
 
-	dbUrl, err := config.Get("DATABASE_URL")
+	dbUrl, err := config.GetDBURL()
 	if err != nil {
 		return err
 	}
@@ -23,6 +23,6 @@ func ConnectToPostgres(ctx *AppContext) error {
 		return err
 	}
 
-	ctx.SetPostgresConn(conn)
+	ctx.setPostgresConn(conn)
 	return nil
 }

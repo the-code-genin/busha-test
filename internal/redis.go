@@ -13,12 +13,12 @@ func ConnectToRedis(ctx *AppContext) error {
 		return err
 	}
 
-	redisHost, err := config.Get("REDIS_HOST")
+	redisHost, err := config.GetRedisHost()
 	if err != nil {
 		return err
 	}
 
-	redisPassword, err := config.Get("REDIS_PASSWORD")
+	redisPassword, err := config.GetRedisPassword()
 	if err != nil {
 		return err
 	}
@@ -28,7 +28,7 @@ func ConnectToRedis(ctx *AppContext) error {
 		Password: redisPassword,
 		DB:       0,
 	})
-	ctx.SetRedisClient(client)
+	ctx.setRedisClient(client)
 
 	return nil
 }
@@ -40,7 +40,7 @@ func RedisKey(ctx *AppContext, key string) (string, error) {
 		return "", err
 	}
 
-	redisPrefix, err := config.Get("REDIS_PREFIX")
+	redisPrefix, err := config.GetRedisPrefix()
 	if err != nil {
 		return "", err
 	}
