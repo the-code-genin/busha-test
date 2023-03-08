@@ -7,15 +7,20 @@ import (
 )
 
 // Connect to redis server
-func ConnectToRedis() (*redis.Client, error) {
-	redisHost, err := DefaultConfig.Get("REDIS_HOST")
+func ConnectToRedis(ctx *AppContext) error {
+	config, err := ctx.GetConfig()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	redisPassword, err := DefaultConfig.Get("REDIS_PASSWORD")
+	redisHost, err := config.Get("REDIS_HOST")
 	if err != nil {
-		return nil, err
+		return err
+	}
+
+	redisPassword, err := config.Get("REDIS_PASSWORD")
+	if err != nil {
+		return err
 	}
 
 	client := redis.NewClient(&redis.Options{
@@ -23,14 +28,22 @@ func ConnectToRedis() (*redis.Client, error) {
 		Password: redisPassword,
 		DB:       0,
 	})
-	return client, nil
+	ctx.SetRedisClient(client)
+
+	return nil
 }
 
 // Prefixes the key with the app redis key for namespacing
-func RedisKey(key string) string {
-	redisPrefix, err := DefaultConfig.Get("REDIS_PREFIX")
+func RedisKey(ctx *AppContext, key string) (string, error) {
+	config, err := ctx.GetConfig()
 	if err != nil {
-		return key
+		return "", err
 	}
-	return fmt.Sprintf("%s.%s", redisPrefix, key)
+
+	redisPrefix, err := config.Get("REDIS_PREFIX")
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%s.%s", redisPrefix, key), nil
 }

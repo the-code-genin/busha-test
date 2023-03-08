@@ -34,7 +34,3 @@ func (c *Config) Get(name string) (string, error) {
 	// Value not available
 	return "", ErrorConfigNotFound
 }
-
-var DefaultConfig = &Config{
-	map[string]interface{}{},
-}

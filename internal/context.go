@@ -11,18 +11,37 @@ import (
 type ContextKey int
 
 const (
-	redisContextKey    ContextKey = 1
-	postgresContextKey ContextKey = 2
+	configContextKey   ContextKey = 1
+	redisContextKey    ContextKey = 2
+	postgresContextKey ContextKey = 3
 )
 
+type AppContext struct {
+	ctx context.Context
+}
+
+// Set configuration on the context
+func (s *AppContext) SetConfig(config *Config) {
+	s.ctx = context.WithValue(s.ctx, configContextKey, config)
+}
+
+// Extract configuration from the context
+func (s *AppContext) GetConfig() (*Config, error) {
+	config, ok := s.ctx.Value(configContextKey).(*Config)
+	if !ok {
+		return nil, errors.New("configuration not found in context")
+	}
+	return config, nil
+}
+
 // Set redis client on the context
-func SetRedisClient(ctx context.Context, redisClient *redis.Client) context.Context {
-	return context.WithValue(ctx, redisContextKey, redisClient)
+func (s *AppContext) SetRedisClient(redisClient *redis.Client) {
+	s.ctx = context.WithValue(s.ctx, redisContextKey, redisClient)
 }
 
 // Extract redis client from the context
-func GetRedisClient(ctx context.Context) (*redis.Client, error) {
-	redisClient, ok := ctx.Value(redisContextKey).(*redis.Client)
+func (s *AppContext) GetRedisClient() (*redis.Client, error) {
+	redisClient, ok := s.ctx.Value(redisContextKey).(*redis.Client)
 	if !ok {
 		return nil, errors.New("redis client not found in context")
 	}
@@ -30,15 +49,19 @@ func GetRedisClient(ctx context.Context) (*redis.Client, error) {
 }
 
 // Set postgres connection on the context
-func SetPostgresConn(ctx context.Context, pgConn *pgx.Conn) context.Context {
-	return context.WithValue(ctx, postgresContextKey, pgConn)
+func (s *AppContext) SetPostgresConn(pgConn *pgx.Conn) {
+	s.ctx = context.WithValue(s.ctx, postgresContextKey, pgConn)
 }
 
 // Extract postgres connection from the context
-func GetPostgresConn(ctx context.Context) (*pgx.Conn, error) {
-	pgConn, ok := ctx.Value(postgresContextKey).(*pgx.Conn)
+func (s *AppContext) GetPostgresConn() (*pgx.Conn, error) {
+	pgConn, ok := s.ctx.Value(postgresContextKey).(*pgx.Conn)
 	if !ok {
 		return nil, errors.New("postgres connection not found in context")
 	}
 	return pgConn, nil
+}
+
+func NewAppContext(ctx context.Context) *AppContext {
+	return &AppContext{ctx}
 }

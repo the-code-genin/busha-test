@@ -1,14 +1,13 @@
 package main
 
 import (
-	"context"
-
 	"github.com/the-code-genin/busha-test/database"
+	"github.com/the-code-genin/busha-test/internal"
 )
 
 // Fetch data from swapi.dev and seed the redis system on first launch
 func SeedDatabase(
-	ctx context.Context,
+	ctx *internal.AppContext,
 ) error {
 	systemRepo, err := database.NewSystemRepository(ctx)
 	if err != nil {

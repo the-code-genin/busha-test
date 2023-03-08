@@ -2,48 +2,62 @@ package main
 
 import (
 	"context"
+	"sync"
 
 	"github.com/inconshreveable/log15"
+	"github.com/the-code-genin/busha-test/api"
 	"github.com/the-code-genin/busha-test/internal"
 )
 
-// Context encapsulates redis and postgres connections
-var ctx context.Context
+// Context encapsulating application resources
+var ctx *internal.AppContext
+var wg sync.WaitGroup
 
 // Setup application context
 func init() {
 	// Setup initial context
-	ctx = context.TODO()
+	ctx := internal.NewAppContext(context.TODO())
 
 	// Load env variables into memory
 	log15.Info("Loading env variables")
-	if err := internal.LoadEnvVariables(); err != nil {
+	if err := internal.LoadEnvVariables(ctx); err != nil {
 		panic(err)
 	}
 
 	// Connect to postgres db
 	log15.Info("Connecting to postgres database")
-	pgConn, err := internal.ConnectToPostgres()
-	if err != nil {
+	if err := internal.ConnectToPostgres(ctx); err != nil {
 		panic(err)
 	}
-	ctx = internal.SetPostgresConn(ctx, pgConn)
 
 	// Connect to redis
 	log15.Info("Connecting to redis server")
-	redisClient, err := internal.ConnectToRedis()
-	if err != nil {
+	if err := internal.ConnectToRedis(ctx); err != nil {
 		panic(err)
 	}
-	ctx = internal.SetRedisClient(ctx, redisClient)
 
 	// Seed the application database at first startup
 	log15.Info("Seeding system with swapi data")
-	if err = SeedDatabase(ctx); err != nil {
+	if err := SeedDatabase(ctx); err != nil {
 		panic(err)
 	}
 }
 
 func main() {
-	// Main
+	// Setup API server
+	server, err := api.NewServer(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	// Run API server
+	wg.Add(1)
+	go func() {
+		log15.Info("Serving HTTP requests")
+		if err := server.Start(); err != nil {
+			panic(err)
+		}
+	}()
+
+	wg.Wait()
 }

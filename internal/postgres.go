@@ -7,16 +7,22 @@ import (
 )
 
 // Connect to postgres server
-func ConnectToPostgres() (*pgx.Conn, error) {
-	dbUrl, err := DefaultConfig.Get("DATABASE_URL")
+func ConnectToPostgres(ctx *AppContext) error {
+	config, err := ctx.GetConfig()
 	if err != nil {
-		return nil, err
+		return err
+	}
+
+	dbUrl, err := config.Get("DATABASE_URL")
+	if err != nil {
+		return err
 	}
 
 	conn, err := pgx.Connect(context.Background(), dbUrl)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return conn, nil
+	ctx.SetPostgresConn(conn)
+	return nil
 }
