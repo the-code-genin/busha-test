@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"sync"
 
 	"github.com/inconshreveable/log15"
@@ -53,7 +54,15 @@ func main() {
 	// Run API server
 	wg.Add(1)
 	go func() {
-		log15.Info("Serving HTTP requests")
+		config, err := ctx.GetConfig()
+		if err != nil {
+			panic(err)
+		}
+		port, err := config.GetHTTPPort()
+		if err != nil {
+			panic(err)
+		}
+		log15.Info(fmt.Sprintf("Serving HTTP requests on [:%d]", port))
 		if err := server.Start(); err != nil {
 			panic(err)
 		}
