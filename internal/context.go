@@ -11,7 +11,7 @@ import (
 type ContextKey int
 
 const (
-	redisContextKey ContextKey = 1
+	redisContextKey    ContextKey = 1
 	postgresContextKey ContextKey = 2
 )
 
