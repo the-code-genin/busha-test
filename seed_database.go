@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"sync"
 
@@ -76,12 +75,10 @@ func SeedDatabase(
 
 	// Unable to fetch all characters from swapi.dev
 	if len(characters) != len(characterURLs) {
-		return errors.New(
-			fmt.Sprintf(
-				"unable to fetch all characters from swapi.dev. Fetched %d expected %d",
-				len(characters),
-				len(characterURLs),
-			),
+		return fmt.Errorf(
+			"unable to fetch all characters from swapi.dev. Fetched %d expected %d",
+			len(characters),
+			len(characterURLs),
 		)
 	}
 
