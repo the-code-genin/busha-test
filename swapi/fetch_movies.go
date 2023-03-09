@@ -10,10 +10,10 @@ import (
 )
 
 type Film struct {
-	Title        string   `json:"title"`
-	OpeningCrawl string   `json:"opening_crawl"`
-	ReleaseDate  string   `json:"release_date"`
-	Characters   []string `json:"characters"`
+	Title         string   `json:"title"`
+	OpeningCrawl  string   `json:"opening_crawl"`
+	ReleaseDate   string   `json:"release_date"`
+	CharacterURLs []string `json:"characters"`
 }
 
 // Fetches movies from swapi.dev

@@ -9,8 +9,8 @@ import (
 
 type Character struct {
 	Name      string `json:"name"`
-	Height    int    `json:"height"`
-	Mass      int    `json:"mass"`
+	Height    string `json:"height"`
+	Mass      string `json:"mass"`
 	BirthYear string `json:"birth_year"`
 	Gender    string `json:"gender"`
 }
