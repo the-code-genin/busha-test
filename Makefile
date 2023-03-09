@@ -1,5 +1,5 @@
 fmt:
-	@go fmt ./ ./api ./database ./internal
+	@go fmt ./ ./api ./database ./internal ./swapi
 
 app:
 	@go build -o build/bin/app ./
