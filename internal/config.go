@@ -13,6 +13,7 @@ const (
 	RedisPrefixKey   = "REDIS_PREFIX"
 	EnvKey           = "ENV"
 	PortKey          = "HTTP_PORT"
+	FilmsURLKey      = "SWAPI_FILMS_URL"
 )
 
 // Config stores a cache of configuration values.
@@ -48,6 +49,11 @@ func (c *Config) get(name string) (string, error) {
 // Get the postgres database URL
 func (c *Config) GetDBURL() (string, error) {
 	return c.get(DBURLKey)
+}
+
+// Get the swapi films URL
+func (c *Config) GetSWAPIFilmsURL() (string, error) {
+	return c.get(FilmsURLKey)
 }
 
 // Get the redis host
